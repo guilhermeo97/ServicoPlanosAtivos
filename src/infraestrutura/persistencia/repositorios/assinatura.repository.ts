@@ -11,6 +11,7 @@ export class AssinaturaRepository {
     const buscar = this.database.base.find(
       (assinatura) => assinatura.codigo === codigo,
     );
+    console.log(buscar);
     if (!buscar) {
       return false;
     }
@@ -21,6 +22,7 @@ export class AssinaturaRepository {
     console.log(assinatura);
     const entidade = AssinaturaEntity.converterParaEntidade(assinatura);
     this.database.base.push(entidade);
+    console.log(this.database.base);
     return true;
   }
 

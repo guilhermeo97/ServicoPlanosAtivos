@@ -12,12 +12,11 @@ async function bootstrap() {
       ],
       queue: 'sistema_planos_ativos_novo_pagamento',
       queueOptions: { durable: true },
-      exchange: 'cmd.topic',
-      routingKey: 'cmd.novo_pagamento',
+      noAck: false,
     },
   });
 
-  await app.listen(3002);
   await app.startAllMicroservices();
+  await app.listen(3002);
 }
 bootstrap();

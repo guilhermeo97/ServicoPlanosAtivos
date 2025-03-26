@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ListarAssinaturaStatus } from 'src/aplicacao/casos de uso/listar-assinatura.use-case';
 
 @Controller('/planosativos')
@@ -8,7 +8,7 @@ export class AssinaturaController {
   ) {}
 
   @Get(':codAss')
-  async listarPorPlano(@Param('codAss') codAss: number) {
+  async listarPorPlano(@Param('codAss', ParseIntPipe) codAss: number) {
     return this.listarAssinaturaStatus.buscar(codAss);
   }
 }
