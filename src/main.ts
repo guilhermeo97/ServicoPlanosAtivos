@@ -1,19 +1,21 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AsyncMicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './infraestrutura/modulos/app.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-    options: {
-      urls: [
-        'amqps://wzdzpmja:yibUYRiKSYiLdR_yBFE0PQSPjBUGSdhd@jaragua.lmq.cloudamqp.com/wzdzpmja',
-      ],
-      queue: 'sistema_planos_ativos_novo_pagamento',
-      queueOptions: { durable: true },
-      noAck: false,
-    },
+  app.connectMicroservice<AsyncMicroserviceOptions>({
+    useFactory: (configService: ConfigService) => ({
+      transport: Transport.RMQ,
+      options: {
+        urls: [configService.get<string>('RMQ_URL')],
+        queue: configService.get<string>('RMQ_FILA_SERVICO_PLANOS_ATIVOS'),
+        queueOptions: { durable: true },
+        noAck: false,
+      },
+    }),
+    inject: [ConfigService],
   });
 
   await app.startAllMicroservices();
